@@ -10,7 +10,7 @@ import java.io.IOException;
 
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    public static final String TAG = "dagger.sample";
+    public static final String TAG = "cam.sample";
 
     private Camera mCamera;
     private SurfaceHolder mHolder;
