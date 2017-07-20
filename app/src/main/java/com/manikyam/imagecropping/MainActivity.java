@@ -23,57 +23,49 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     RelativeLayout outerLayout;
     RelativeLayout mainLayout;
-    private String TAG = "Camera.sample";
+    private String TAG = "======Camera.sample";
     private Camera mCamera;
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-
             Bitmap _bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
-
             Matrix matrix = new Matrix();
             matrix.postRotate(90);
-
-            Bitmap bitmapPicture = Bitmap.createBitmap(_bitmapPicture, 0, 0, _bitmapPicture.getWidth(), _bitmapPicture.getHeight(), matrix, true);
-
+            Bitmap bitmapPicture = null;
+            try {
+                Bitmap bp = Bitmap.createBitmap(_bitmapPicture, 0, 0, _bitmapPicture.getWidth(), _bitmapPicture.getHeight(), matrix, true);
+                bitmapPicture = Bitmap.createScaledBitmap(bp, (int) (bp.getWidth() * 0.7), (int) (bp.getHeight() * 0.7), true);
+            } catch (OutOfMemoryError e){
+                return;
+            }
             int bitmapWidth = bitmapPicture.getWidth();
             int bitmapHeight = bitmapPicture.getHeight();
             Log.d(TAG, "bitmapWidth = " + bitmapWidth + " & bitmapHeight = " + bitmapHeight);
-
             int outerLayoutWidth = outerLayout.getWidth();
             int outerLayoutHeight = outerLayout.getHeight();
             Log.d(TAG, "outerLayoutWidth = " + outerLayoutWidth + " & outerLayoutHeight = " + outerLayoutHeight);
-
             int mainLayoutWidth = mainLayout.getWidth();
             int mainLayoutHeight = mainLayout.getHeight();
             Log.d(TAG, "mainLayoutWidth = " + mainLayoutWidth + " & mainLayoutHeight = " + mainLayoutHeight);
-
             float widthPercentage = (float) mainLayoutWidth / (float) outerLayoutWidth;
             float heightPercentage = (float) mainLayoutHeight / (float) outerLayoutHeight;
             Log.d(TAG, "widthPercentage = " + widthPercentage + " & heightPercentage = " + heightPercentage);
-
             int newBitmapWidth = (int) (bitmapWidth * widthPercentage);
             int newBitmapHeight = (int) (bitmapHeight * heightPercentage);
             Log.d(TAG, "newBitmapWidth = " + newBitmapWidth + " & newBitmapHeight = " + newBitmapHeight);
-
             int newBitmapLeft = (int) (bitmapWidth * ((1 - widthPercentage) / 2));
             int newBitmapTop = (int) (bitmapHeight * ((1 - heightPercentage) / 2));
             Log.d(TAG, "newBitmapLeft = " + newBitmapLeft + " & newBitmapTop = " + newBitmapTop);
-
             Bitmap newBitmapPicture = Bitmap.createBitmap(bitmapPicture, newBitmapLeft, newBitmapTop, newBitmapWidth, newBitmapHeight, null, true);
-
-
             String pictureFilePath = getOutputMediaFilePath();
             File pictureFile = new File(pictureFilePath + ".jpg");
             File croppedPictureFile = new File(pictureFilePath + "_cropped.jpg");
-
             FileOutputStream out = null;
             FileOutputStream out1 = null;
             try {
-                out = new FileOutputStream(pictureFile);
-                bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, out);
-
+               // out = new FileOutputStream(pictureFile);
+                //bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, out);
                 out1 = new FileOutputStream(croppedPictureFile);
                 newBitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, out1);
 
@@ -81,10 +73,10 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             } finally {
                 try {
-                    if (out != null) {
+                  /*  if (out != null) {
                         out.flush();
                         out.close();
-                    }
+                    }*/
                     if (out1 != null) {
                         out1.flush();
                         out1.close();
@@ -93,13 +85,11 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
             Uri uri = Uri.fromFile(pictureFile);
             Uri uri1 = Uri.fromFile(croppedPictureFile);
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             mediaScanIntent.setData(uri);
             sendBroadcast(mediaScanIntent);
-
             Intent mediaScanIntent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             mediaScanIntent1.setData(uri1);
             sendBroadcast(mediaScanIntent1);
@@ -108,13 +98,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static String getOutputMediaFilePath() {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MyCameraApp");
-
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 return null;
             }
         }
-
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         return mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp;
     }
