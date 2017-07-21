@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -40,8 +41,20 @@ public class MainActivity extends AppCompatActivity  {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             Bitmap _bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(0, info);
+            int degrees = 0;
+            int rotation = getWindowManager().getDefaultDisplay().getRotation();
+            switch (rotation) {
+                case Surface.ROTATION_0: degrees = 0; break;
+                case Surface.ROTATION_90: degrees = 90; break;
+                case Surface.ROTATION_180: degrees = 180; break;
+                case Surface.ROTATION_270: degrees = 270; break;
+            }
+            int result = (info.orientation - degrees + 360) % 360;
+
             Matrix matrix = new Matrix();
-            matrix.postRotate(90);
+            matrix.postRotate(result);
             Bitmap bitmapPicture = null;
             try {
                 Bitmap bp = Bitmap.createBitmap(_bitmapPicture, 0, 0, _bitmapPicture.getWidth(), _bitmapPicture.getHeight(), matrix, true);
@@ -114,6 +127,8 @@ public class MainActivity extends AppCompatActivity  {
         finish();
 
     }
+
+
 
 
 

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,10 +20,18 @@ public class FirstScreen extends AppCompatActivity implements IOnPermissionsDeny
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_screen);
         button= (Button) findViewById(R.id.pictureBT);
+
         if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_CAMERA);
+            int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int permissionCheck1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED||permissionCheck1 != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_CAMERA);
+            }
+            else{
+                button.setOnClickListener(this);
+            }
         }
         else{
             button.setOnClickListener(this);
