@@ -2,6 +2,7 @@ package com.manikyam.imagecropping;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.Surface;
@@ -24,6 +25,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         this.activity= (Activity) context;
         mHolder = getHolder();
         mHolder.addCallback(this);
+        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         // mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
@@ -61,6 +63,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
         // start outerLayout with new settings
         try {
+            mHolder.setFormat(PixelFormat.RGBA_8888);
             mCamera.setPreviewDisplay(mHolder);
             Camera.CameraInfo info = new Camera.CameraInfo();
             Camera.getCameraInfo(0, info);

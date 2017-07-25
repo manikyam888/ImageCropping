@@ -31,7 +31,7 @@ public class CameraUtils {
 
             //param.setPreviewFrameRate(100);
             //param.setPreviewSize(1080,1548);
-            List<Camera.Size> sizes = param.getSupportedPictureSizes();
+            List<Camera.Size> sizes = param.getSupportedPreviewSizes();
                 Camera.Size size = sizes.get(0);
                 for(int i=0;i<sizes.size();i++)
                 {

@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity  {
             matrix.postRotate(result);
             Bitmap bitmapPicture = null;
             try {
-                Bitmap bp = Bitmap.createBitmap(_bitmapPicture, 0, 0, _bitmapPicture.getWidth(), _bitmapPicture.getHeight(), matrix, true);
-                bitmapPicture = Bitmap.createScaledBitmap(bp, (int) (bp.getWidth() * 0.7), (int) (bp.getHeight() * 0.7), true);
+                 bitmapPicture = Bitmap.createBitmap(_bitmapPicture, 0, 0, _bitmapPicture.getWidth(), _bitmapPicture.getHeight(), matrix, true);
+                //bitmapPicture = Bitmap.createScaledBitmap(bp, (int) (bp.getWidth() * 0.7), (int) (bp.getHeight() * 0.7), true);
             } catch (OutOfMemoryError e){
                 return;
             }
