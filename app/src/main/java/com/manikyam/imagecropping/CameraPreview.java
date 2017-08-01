@@ -14,7 +14,6 @@ import java.io.IOException;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     public static final String TAG = "cam.sample";
-
     private Camera mCamera;
     private SurfaceHolder mHolder;
     private Activity activity;
@@ -26,7 +25,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mHolder = getHolder();
         mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        // mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
@@ -45,22 +43,18 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
         // If your outerLayout can change or rotate, take care of those events here.
         // Make sure to stop the outerLayout before resizing or reformatting it.
-
         if (mHolder.getSurface() == null) {
             // outerLayout surface does not exist
             return;
         }
-
         // stop outerLayout before making changes
         try {
             mCamera.stopPreview();
         } catch (Exception e) {
             // ignore: tried to stop a non-existent outerLayout
         }
-
         // set outerLayout size and make any resize, rotate or
         // reformatting changes here
-
         // start outerLayout with new settings
         try {
             mHolder.setFormat(PixelFormat.RGBA_8888);
@@ -78,7 +72,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             int result = (info.orientation - degrees + 360) % 360;
             mCamera.setDisplayOrientation(result);
             mCamera.startPreview();
-
         } catch (Exception e) {
             Log.d(TAG, "Error starting camera outerLayout: " + e.getMessage());
         }

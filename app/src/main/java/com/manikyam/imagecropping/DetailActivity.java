@@ -3,8 +3,8 @@ package com.manikyam.imagecropping;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -20,9 +20,7 @@ public class DetailActivity extends AppCompatActivity {
             if(path!=null) {
                 File imgFile = new File(path);
                 if (imgFile.exists()) {
-
                     Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
                     ImageView imageView = (ImageView) findViewById(R.id.imageView);
                     imageView.setImageBitmap(myBitmap);
                 }

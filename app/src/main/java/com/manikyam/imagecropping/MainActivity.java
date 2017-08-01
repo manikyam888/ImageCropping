@@ -1,35 +1,28 @@
 package com.manikyam.imagecropping;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     RelativeLayout outerLayout;
     RelativeLayout mainLayout;
@@ -46,20 +39,26 @@ public class MainActivity extends AppCompatActivity  {
             int degrees = 0;
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             switch (rotation) {
-                case Surface.ROTATION_0: degrees = 0; break;
-                case Surface.ROTATION_90: degrees = 90; break;
-                case Surface.ROTATION_180: degrees = 180; break;
-                case Surface.ROTATION_270: degrees = 270; break;
+                case Surface.ROTATION_0:
+                    degrees = 0;
+                    break;
+                case Surface.ROTATION_90:
+                    degrees = 90;
+                    break;
+                case Surface.ROTATION_180:
+                    degrees = 180;
+                    break;
+                case Surface.ROTATION_270:
+                    degrees = 270;
+                    break;
             }
             int result = (info.orientation - degrees + 360) % 360;
-
             Matrix matrix = new Matrix();
             matrix.postRotate(result);
             Bitmap bitmapPicture = null;
             try {
-                 bitmapPicture = Bitmap.createBitmap(_bitmapPicture, 0, 0, _bitmapPicture.getWidth(), _bitmapPicture.getHeight(), matrix, true);
-                //bitmapPicture = Bitmap.createScaledBitmap(bp, (int) (bp.getWidth() * 0.7), (int) (bp.getHeight() * 0.7), true);
-            } catch (OutOfMemoryError e){
+                bitmapPicture = Bitmap.createBitmap(_bitmapPicture, 0, 0, _bitmapPicture.getWidth(), _bitmapPicture.getHeight(), matrix, true);
+            } catch (OutOfMemoryError e) {
                 return;
             }
             int bitmapWidth = bitmapPicture.getWidth();
@@ -83,13 +82,11 @@ public class MainActivity extends AppCompatActivity  {
             Bitmap newBitmapPicture = Bitmap.createBitmap(bitmapPicture, newBitmapLeft, newBitmapTop, newBitmapWidth, newBitmapHeight, null, true);
             String pictureFilePath = getOutputMediaFilePath();
             File pictureFile = new File(pictureFilePath + ".jpg");
-             path=pictureFilePath + "_cropped.jpg";
+            path = pictureFilePath + "_cropped.jpg";
             File croppedPictureFile = new File(path);
             FileOutputStream out = null;
             FileOutputStream out1 = null;
             try {
-               // out = new FileOutputStream(pictureFile);
-                //bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, out);
                 out1 = new FileOutputStream(croppedPictureFile);
                 newBitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, out1);
 
@@ -97,10 +94,6 @@ public class MainActivity extends AppCompatActivity  {
                 e.printStackTrace();
             } finally {
                 try {
-                  /*  if (out != null) {
-                        out.flush();
-                        out.close();
-                    }*/
                     if (out1 != null) {
                         out1.flush();
                         out1.close();
@@ -120,18 +113,6 @@ public class MainActivity extends AppCompatActivity  {
         }
     };
 
-    private void callIntent() {
-        Intent intent=new Intent(this,DetailActivity.class);
-       intent.putExtra("url",path);
-        startActivity(intent);
-        finish();
-
-    }
-
-
-
-
-
     private static String getOutputMediaFilePath() {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MyCameraApp");
         if (!mediaStorageDir.exists()) {
@@ -143,23 +124,26 @@ public class MainActivity extends AppCompatActivity  {
         return mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp;
     }
 
+    private void callIntent() {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("url", path);
+        startActivity(intent);
+        finish();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         outerLayout = (RelativeLayout) findViewById(R.id.frameLayout);
         mainLayout = (RelativeLayout) findViewById(R.id.frameLayout1);
-
-        // Create an instance of Camera
-
     }
-
 
 
     @Override
     protected void onResume() {
         super.onResume();
-
         mCamera = CameraUtils.getCameraInstance();
         CameraPreview mPreview = new CameraPreview(this, mCamera);
         outerLayout.removeAllViews();
@@ -174,8 +158,7 @@ public class MainActivity extends AppCompatActivity  {
             public void run() {
                 callIntent();
             }
-        },1000);
-
+        }, 1000);
     }
 
     @Override
